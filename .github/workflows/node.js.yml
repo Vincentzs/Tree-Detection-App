@@ -16,7 +16,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [14.x, 16.x, 18.x]
+        node-version: [18.x]
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
@@ -24,7 +24,14 @@ jobs:
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v3
       with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'npm'
-    - run: npm ci
-    - run: npm run build --if-present
+          node-version: ${{ matrix.node-version }}
+    - name: Clean node_modules 🧹
+      run: npm run clean-nuke
+    - name: Install Dependencies 📦
+      run: npm run clean-install
+    - name: Build server 🔨
+      run: npm run build
+    - name: Test code 🧪
+      run: npm test
+    # - name: Deploy to Heroku 🛫
+    #   run: npm run deploy
